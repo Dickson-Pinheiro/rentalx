@@ -1,16 +1,15 @@
 import {Request, Response} from 'express'
 import { CreateCategoryUseCase } from './CreateCategoryUseCase'
+import {container} from "tsyringe"
 
 class CreateCategoryController {
 
-    constructor(private createCategoryUSeCate: CreateCategoryUseCase){}
-
-
-    handle(request: Request, response: Response): Response{
+    async handle(request: Request, response: Response): Promise<Response>{
         const {name, description} = request.body
-    
         
-        this.createCategoryUSeCate.execute({name, description})
+        const createCategoryUSeCase = container.resolve(CreateCategoryUseCase)
+
+        await createCategoryUSeCase.execute({name, description})
         
         return response.status(201).send()
     }
